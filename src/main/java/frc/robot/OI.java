@@ -2,18 +2,32 @@ package frc.robot;
 
 import edu.wpi.first.wpilibj.Joystick;
 
+//This controllers are user input
+//It also has the normalize method cuz IDK where else to put it
+//To add another controller:
+//  1. Copy the line that includes "Joystick contOne = new Joystick(0)"
+//  2. Change "contOne" to "contTwo"
+//  3. Change "Joystick(0)" to "Joystick(1)"
 public class OI {
 
     private static Joystick contOne = new Joystick(0);
 
-    public static void button(int button){
-        contOne.getRawButton(button);
+    //Returns whether or not the button is being pressed
+    //The method takes in the RobotMap button
+    //i.e "RobotMap.A_BUTTON"
+    public static boolean button(int button){
+        return contOne.getRawButton(button);
     }
 
-    public static void axis(int axis){
-        contOne.getRawAxis(axis);
+    //Returns how much the axises is being pushed or pulled down
+    //The method takes in RobotMap axis
+    //i.e. "RobotMap.LT"
+    public static double axis(int axis){
+        return contOne.getRawAxis(axis);
     }
 
+    //Takes in a value and some bounds and forces it within those bounds
+    //Used pretty much everywhere, so make sure you don't change anything to drastic.
     public static double normalize(double value, double min, double max){
         if(value > max)
             return max;
