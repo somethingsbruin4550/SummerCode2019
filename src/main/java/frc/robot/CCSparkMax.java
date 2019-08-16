@@ -1,11 +1,15 @@
 package frc.robot;
 
 import com.revrobotics.CANEncoder;
+import com.revrobotics.CANPIDController;
 import com.revrobotics.CANSparkMax;
 
 //Documention: http://www.revrobotics.com/content/sw/max/sw-docs/java/com/revrobotics/CANSparkMax.html#%3Cinit%3E(int,com.revrobotics.CANSparkMaxLowLevel.MotorType)
 
 public class CCSparkMax extends CANSparkMax{
+
+    CANPIDController pidController;
+    CANEncoder encoder;
 
     /**
      * CCSparkMax allows us to easily control Spark Max motor controllers
@@ -19,9 +23,52 @@ public class CCSparkMax extends CANSparkMax{
         super(deviceID, controlMode);
         super.setIdleMode(idleMode);
         super.setInverted(reverse);
+
+        pidController = super.getPIDController();
+        encoder = super.getEncoder();
     }
 
+    /**
+     * Sets the speed of the motor controller
+     * @param speed The speed that will be set (-1.0 to 1.0)
+     */
     public void set(double speed){
         super.set(speed);
+    }
+
+    /**
+     * Sets the Position Conversion Factor for the encoder
+     * @param factor The ratio of encoder units to desired units (ie. units -> in)
+     */
+    public void setPositionConversionFactor(double factor){
+        encoder.setPositionConversionFactor(factor);
+    }
+
+    /**
+     * Sets the encoder position
+     * @param pos The new encoder position
+     */
+    public void setPosition(double pos){
+        encoder.setPosition(pos);
+    }
+
+    /**
+     * Returns the position of the encoder.
+     * By default the position is in encoder units, but will return a distance if the Position Conversion Factor has been set.
+     */
+    public double getPosition(){
+        return encoder.getPosition();
+    }
+
+    /**
+     * Sets the PID values, must be positive
+     * @param Kp The proportional gain value
+     * @param Ki The integral gain value
+     * @param Kd The derivative gain value
+     */
+    public void setPID(double Kp, double Ki, double Kd){
+        pidController.setP(Kp);
+        pidController.setI(Ki);
+        pidController.setD(Kd);
     }
 }
