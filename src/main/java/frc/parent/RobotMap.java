@@ -24,10 +24,10 @@ public interface RobotMap {
     public static final int BACK_RIGHT = 8;
 
     // Wheel Talon Polarity
-    public static final boolean FL_REVERSE = false;
-    public static final boolean FR_REVERSE = true;
-    public static final boolean BL_REVERSE = false;
-    public static final boolean BR_REVERSE = true;
+    public static final boolean FL_REVERSE = true;
+    public static final boolean FR_REVERSE = false;
+    public static final boolean BL_REVERSE = true;
+    public static final boolean BR_REVERSE = false;
 
     // Wheel Encoder Ports
     public static final int ENCODER_A_LEFT = 0;// 0

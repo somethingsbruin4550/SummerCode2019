@@ -7,7 +7,7 @@ import frc.parent.*;
 public class Intake extends Mechanisms{
 
     public Intake(int portOne, int portTwo){
-        super(portOne, true, portTwo, false);
+        super(portOne, true, portTwo, true);
     }
 
     public void set(double speed){

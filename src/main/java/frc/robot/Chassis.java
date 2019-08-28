@@ -26,7 +26,7 @@ public class Chassis implements RobotMap{
     //Takes in two axises, most likely the controller axises
     //Optimized for a west coast or standard chassis
     //DO NOT USE THIS FOR SWERV DRIVE 
-    public static void tankDrive(double yAxis, double xAxis){
+    public static void axisDrive(double yAxis, double xAxis){
         fLeft.set(OI.normalize((yAxis + xAxis), -1.0, 1.0));
         fRight.set(OI.normalize((yAxis - xAxis), -1.0, 1.0));
         bLeft.set(OI.normalize((yAxis + xAxis), -1.0, 1.0));

@@ -22,9 +22,4 @@ public abstract class Mechanisms{
     //Sets the motors to a percent output [-100%, 100%]
     //If you only use one talon, ONLY SET ONE TALON
     public abstract void set(double speed);
-
-    //Returns the percent output of the first talon for testing purposes
-    public double getSpeed(){
-        return tOne.getSpeed();
-    }
 }

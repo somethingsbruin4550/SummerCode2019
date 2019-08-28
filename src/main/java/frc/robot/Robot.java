@@ -7,6 +7,7 @@
 
 package frc.robot;
 
+import frc.parent.*;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -18,11 +19,15 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
  * creating this project, you must also update the build.gradle file in the
  * project.
  */
-public class Robot extends TimedRobot {
+public class Robot extends TimedRobot implements RobotMap {
   private static final String kDefaultAuto = "Default";
   private static final String kCustomAuto = "My Auto";
   private String m_autoSelected;
   private final SendableChooser<String> m_chooser = new SendableChooser<>();
+
+  Intake intake;
+  Climber climber;
+  Elevator elevator;
 
   /**
    * This function is run when the robot is first started up and should be
@@ -33,6 +38,11 @@ public class Robot extends TimedRobot {
     m_chooser.setDefaultOption("Default Auto", kDefaultAuto);
     m_chooser.addOption("My Auto", kCustomAuto);
     SmartDashboard.putData("Auto choices", m_chooser);
+
+    intake = new Intake(RobotMap.INTAKE_A, RobotMap.INTAKE_B);
+    climber = new Climber(RobotMap.CLIMBER, false);
+    elevator = new Elevator(RobotMap.ELEVATOR, false);
+
   }
 
   /**
@@ -86,7 +96,28 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void teleopPeriodic() {
-  }
+      Chassis.axisDrive(OI.normalize(OI.axis(RobotMap.L_JOYSTICK_VERTICAL), -1.0, 1.0), 
+                          -OI.normalize(OI.axis(RobotMap.R_JOYSTICK_HORIZONTAL), -1.0, 1.0));
+
+      if(OI.button(RobotMap.Y_BUTTON))
+        intake.set(1.0);
+      else if(OI.button(RobotMap.A_BUTTON))
+        intake.set(-1.0);
+      else
+        intake.set(0.0);
+
+      if(OI.button(RobotMap.RB_BUTTON))
+        climber.set(-1.0);
+      else if(OI.button(RobotMap.LB_BUTTON))
+        climber.set(1.0);
+      else
+        climber.set(0.0);
+
+      if(OI.axis(RobotMap.RT) > 0.1)
+        elevator.set(OI.normalize(OI.axis(RobotMap.RT), -1.0, 1.0));
+      else if(OI.axis(RobotMap.LT) > 0.1)
+        elevator.set(-OI.normalize(OI.axis(RobotMap.LT), -1.0, 1.0));
+    }
 
   /**
    * This function is called periodically during test mode.
