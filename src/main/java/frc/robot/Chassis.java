@@ -59,7 +59,7 @@ public class Chassis implements RobotMap{
     */
 
     //Drives the robot to a certain distance
-    //Kinda complex -> DO NOT TOUCH UNLESS HUMANSHOE OR ETHAN SAYS SO
+    //Kinda complex -> DO NOT TOUCH
     public static void driveDist(double goal, double kp, double max, boolean debug){
         double pos = getDist();
         double error = goal-pos;
@@ -90,11 +90,11 @@ public class Chassis implements RobotMap{
     }
 
     //Turns the robot to a certain angle
-    //Kinda complex -> DO NOT TOUCH UNLESS HUMANSHOE OR ETHAN SAYS SO
+    //Kinda complex -> DO NOT TOUCH
     public static void turnToAngle(double goal, double kp, double max, boolean debug){
         double angl = gyro.getAngle();
         double error = goal-angl;
-        double aError = goal*0.05;
+        double aError = goal*0.07;
         double input = 0;
 
         while(true){
@@ -120,5 +120,7 @@ public class Chassis implements RobotMap{
         }
     }
 
+
+    
     
 }

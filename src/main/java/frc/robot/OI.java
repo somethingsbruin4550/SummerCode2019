@@ -31,10 +31,12 @@ public class OI {
     public static double normalize(double value, double min, double max){
         if(value > max)
             return max;
-        else if (value < min)
+        else if(value < min)
             return min;
-        else
+        else 
             return value;
+
+       //return value > max ? max : value < min ? min : value;
     }
 
 
