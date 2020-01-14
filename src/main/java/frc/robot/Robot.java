@@ -8,9 +8,16 @@
 package frc.robot;
 
 import frc.parent.*;
+
+import com.revrobotics.ControlType;
+import com.revrobotics.CANSparkMax.IdleMode;
+import com.revrobotics.CANSparkMaxLowLevel.MotorType;
+
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import frc.robot.sensors.LemonLight;
+import frc.robot.CCSparkMax;
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -19,7 +26,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
  * creating this project, you must also update the build.gradle file in the
  * project.
  */
-public class Robot extends TimedRobot implements RobotMap {
+public class Robot extends TimedRobot implements RobotMap, ControMap {
   private static final String kDefaultAuto = "Default";
   private static final String kCustomAuto = "My Auto";
   private String m_autoSelected;
@@ -28,6 +35,7 @@ public class Robot extends TimedRobot implements RobotMap {
   Intake intake;
   Climber climber;
   Elevator elevator;
+  CCSparkMax shooterMax;
 
   /**
    * This function is run when the robot is first started up and should be
@@ -41,8 +49,8 @@ public class Robot extends TimedRobot implements RobotMap {
 
     intake = new Intake(RobotMap.INTAKE_A, RobotMap.INTAKE_B);
     climber = new Climber(RobotMap.CLIMBER, false);
-    elevator = new Elevator(RobotMap.ELEVATOR, false);
-
+    elevator = new Elevator();
+    shooterMax = new CCSparkMax(10, MotorType.kBrushless, IdleMode.kBrake, false);
   }
 
   /**
@@ -82,7 +90,8 @@ public class Robot extends TimedRobot implements RobotMap {
   public void autonomousPeriodic() {
     switch (m_autoSelected) {
       case kCustomAuto:
-        // Put custom auto code here
+        elevator.setConst(0.005, 0, 0 , 0);
+        elevator.setPos(100);
         break;
       case kDefaultAuto:
       default:
@@ -91,38 +100,61 @@ public class Robot extends TimedRobot implements RobotMap {
     }
   }
 
+  @Override
+  public void teleopInit() {
+    LemonLight.setLight(true);
+  }
+
   /**
    * This function is called periodically during operator control.
    */
   @Override
   public void teleopPeriodic() {
-      Chassis.axisDrive(OI.normalize(OI.axis(RobotMap.L_JOYSTICK_VERTICAL), -1.0, 1.0), 
-                          -OI.normalize(OI.axis(RobotMap.R_JOYSTICK_HORIZONTAL), -1.0, 1.0));
-
-      if(OI.button(RobotMap.Y_BUTTON))
-        intake.set(1.0);
-      else if(OI.button(RobotMap.A_BUTTON))
-        intake.set(-1.0);
-      else
-        intake.set(0.0);
-
-      if(OI.button(RobotMap.RB_BUTTON))
-        climber.set(-1.0);
-      else if(OI.button(RobotMap.LB_BUTTON))
-        climber.set(1.0);
-      else
-        climber.set(0.0);
-
-      if(OI.axis(RobotMap.RT) > 0.1)
-        elevator.set(OI.normalize(OI.axis(RobotMap.RT), -1.0, 1.0));
-      else if(OI.axis(RobotMap.LT) > 0.1)
-        elevator.set(-OI.normalize(OI.axis(RobotMap.LT), -1.0, 1.0));
+    if(!OI.button(PilotMap.STICK_MID)){
+      Chassis.axisDrive(OI.normalize(OI.axis(PilotMap.Y_AXIS), -1.0, 1.0), 
+                          -OI.normalize(OI.axis(PilotMap.X_AXIS), -1.0, 1.0));
+    } else {
+      Chassis.lockOn(true, 3.0);
     }
+
+    if(OI.button(PilotMap.STICK_BACK)){
+      shooterMax.set(1.0);
+    }
+    else{
+      shooterMax.disable();
+    }
+
+    // System.out.println(Chassis.distToTarget());
+
+    // System.out.println(Chassis.distToTarget() + " Meters");
+     // Chassis.followTarget();
+      // if(OI.button(PilotMap.STICK_LEFT))
+      //   intake.set(1.0);
+      // else if(OI.button(PilotMap.TRIGGER))
+      //   intake.set(-1.0);
+      // else
+      //   intake.set(0.0);
+
+      // if(OI.button(PilotMap.STICK_MID))
+      //   elevator.set(-1.0);
+      // else if(OI.button(PilotMap.STICK_BACK))
+      //   elevator.set(1.0);
+      // else
+      //   elevator.set(0.0);
+
+    }
+
+  @Override
+  public void disabledInit() {
+   // lemonCamera.setLight(false);
+  }
 
   /**
    * This function is called periodically during test mode.
    */
   @Override
   public void testPeriodic() {
+    LemonLight.setLight(true);
+
   }
 }

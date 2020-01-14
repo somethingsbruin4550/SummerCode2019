@@ -1,10 +1,16 @@
 package frc.robot;
 
 import frc.parent.*;
+import frc.robot.sensors.LemonLight;
 import edu.wpi.first.wpilibj.Encoder;
 import com.kauailabs.navx.frc.AHRS;
 import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.Timer;
+// import edu.wpi.first.networktables.NetworkTable;
+// import edu.wpi.first.networktables.NetworkTableEntry;
+// import edu.wpi.first.networktables.NetworkTableInstance;
+// import edu.wpi.first.networktables.NetworkTableType;
+// import edu.wpi.first.networktables.NetworkTableValue;
 
 public class Chassis implements RobotMap{
 
@@ -42,6 +48,57 @@ public class Chassis implements RobotMap{
         bRight.set(OI.normalize(rSpeed, -1.0, 1.0));
     }
 
+    public static void lockOn(boolean follow, double holdDist){
+        double x = LemonLight.getYaw();
+        double error = Math.abs(x);
+        double input = OI.normalize((error*2)/100, 0.4, 0.7);
+        double leftSpd, rightSpd;
+        // System.out.println(input);
+
+        if(LemonLight.hasTarget()){
+            if(x > 2.0){
+                leftSpd = -input;
+                rightSpd = input;
+            }
+            else if(x < -2.0){
+                leftSpd = input;
+                rightSpd = -input;
+            }
+            else{
+                leftSpd = 0.0;
+                rightSpd = 0.0;
+            }
+
+            if(follow){
+                double maxTurn = 0.35;
+                leftSpd = OI.normalize(leftSpd, -maxTurn, maxTurn);
+                rightSpd = OI.normalize(rightSpd, -maxTurn, maxTurn);
+
+
+                double maxFollow = -0.2;
+                double distTo = LemonLight.distToTarget() - holdDist;
+                System.out.println(distTo);
+                if(distTo > 0.15){
+                    leftSpd += maxFollow;
+                    rightSpd += maxFollow;
+                }
+                else if(distTo < -0.15){
+                    leftSpd -= maxFollow;
+                    rightSpd -= maxFollow;
+                }
+                // leftSpd += OI.normalize((distToTarget() - holdDist) / 3.0, -maxFollow, maxFollow);
+                // rightSpd += OI.normalize((distToTarget() - holdDist) / 3.0, -maxFollow, maxFollow);
+            }
+
+        } else {
+            leftSpd = 0.0;
+            rightSpd = 0.0;
+            
+        }
+
+        driveSpd(leftSpd,rightSpd);
+
+    }
     //Sets the gyro and encoders to zero
     public static void reset(){
         eLeft.reset();

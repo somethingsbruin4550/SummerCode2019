@@ -1,6 +1,7 @@
 package frc.robot;
 
 import com.revrobotics.CANEncoder;
+import com.revrobotics.CANError;
 import com.revrobotics.CANPIDController;
 import com.revrobotics.CANSparkMax;
 
@@ -21,8 +22,12 @@ public class CCSparkMax extends CANSparkMax{
      */
     public CCSparkMax(int deviceID, MotorType controlMode, IdleMode idleMode, boolean reverse){
         super(deviceID, controlMode);
-        super.setIdleMode(idleMode);
+
+        if(super.setIdleMode(idleMode) != CANError.kOk){
+            System.out.println("Spark Max Idle Mode Not Set");
+        }
         super.setInverted(reverse);
+        
 
         pidController = super.getPIDController();
         encoder = super.getEncoder();
@@ -34,6 +39,10 @@ public class CCSparkMax extends CANSparkMax{
      */
     public void set(double speed){
         super.set(speed);
+    }
+
+    public void disable(){
+        super.disable();
     }
 
     /**
@@ -66,10 +75,11 @@ public class CCSparkMax extends CANSparkMax{
      * @param Ki The integral gain value
      * @param Kd The derivative gain value
      */
-    public void setPID(double Kp, double Ki, double Kd){
+    public void setPID(double Kp, double Ki, double Kd, double Ff){
         pidController.setP(Kp);
         pidController.setI(Ki);
         pidController.setD(Kd);
+        pidController.setFF(Ff);
     }
 
     
