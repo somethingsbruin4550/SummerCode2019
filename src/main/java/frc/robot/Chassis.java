@@ -1,7 +1,7 @@
 package frc.robot;
 
 import frc.parent.*;
-import frc.robot.sensors.LemonLight;
+import frc.sensors.LemonLight;
 import edu.wpi.first.wpilibj.Encoder;
 import com.kauailabs.navx.frc.AHRS;
 import edu.wpi.first.wpilibj.SPI;

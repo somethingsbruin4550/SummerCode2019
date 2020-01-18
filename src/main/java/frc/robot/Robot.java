@@ -8,6 +8,7 @@
 package frc.robot;
 
 import frc.parent.*;
+import frc.sensors.*;
 
 // import com.revrobotics.ControlType;
 import com.revrobotics.CANSparkMax.IdleMode;
@@ -17,9 +18,10 @@ import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.networktables.NetworkTableEntry;
-import frc.robot.sensors.LemonLight;
 import frc.robot.CCSparkMax;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.trajectory.*;
+import java.nio.file.Paths;
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -36,7 +38,11 @@ public class Robot extends TimedRobot implements RobotMap, ControMap {
   private final SendableChooser<String> m_chooser = new SendableChooser<>();
 
   private static int alliance;
+  
+  Trajectory trajectory;
 
+
+  double spdmlt = 1;
   Intake intake;
   Climber climber;
   // Elevator elevator;
@@ -48,6 +54,13 @@ public class Robot extends TimedRobot implements RobotMap, ControMap {
    */
   @Override
   public void robotInit() {
+
+    try{
+      trajectory = TrajectoryUtil.fromPathweaverJson(Paths.get("/home/lvuser/deploy/Unnamed.wpilib.json"));
+    }catch(Exception e){
+      //
+    } 
+
     m_chooser.setDefaultOption("Default Auto", kDefaultAuto);
     m_chooser.addOption("My Auto", kCustomAuto);
     m_chooser.addOption("Reset PID Values", kResetPIDs);
@@ -156,20 +169,25 @@ public class Robot extends TimedRobot implements RobotMap, ControMap {
    */
   @Override
   public void teleopPeriodic() {
+    spdmlt = 13.619 * LemonLight.distToTarget() + 45;
+
     if(!OI.button(PilotMap.STICK_MID)){
       Chassis.axisDrive(OI.normalize(OI.axis(PilotMap.Y_AXIS), -1.0, 1.0), 
                           -OI.normalize(OI.axis(PilotMap.X_AXIS), -1.0, 1.0));
     } else {
-      Chassis.lockOn(true, 3.0);
+      Chassis.lockOn(false, 3.0);
     }
 
     if(OI.button(PilotMap.STICK_BACK)){
-      shooterMax.set(1.0);
+      shooterMax.set(spdmlt);
     }
     else{
       shooterMax.disable();
     }
 
+    // spdmlt = OI.normalize(OI.axis(PilotMap.Z_AXIS), 0, 1);
+
+    System.out.println(spdmlt);
     // System.out.println(Chassis.distToTarget());
 
     // System.out.println(Chassis.distToTarget() + " Meters");
