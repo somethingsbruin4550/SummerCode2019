@@ -192,12 +192,12 @@ public class Robot extends TimedRobot implements RobotMap, ControMap {
 
     // System.out.println(Chassis.distToTarget() + " Meters");
      // Chassis.followTarget();
-      // if(OI.button(PilotMap.STICK_LEFT))
-      //   intake.set(1.0);
-      // else if(OI.button(PilotMap.TRIGGER))
-      //   intake.set(-1.0);
-      // else
-      //   intake.set(0.0);
+      if(OI.button(PilotMap.STICK_LEFT))
+        intake.set(1.0);
+      else if(OI.button(PilotMap.TRIGGER))
+        intake.set(-1.0);
+      else
+        intake.set(0.0);
 
       // if(OI.button(PilotMap.STICK_MID))
       //   elevator.set(-1.0);
