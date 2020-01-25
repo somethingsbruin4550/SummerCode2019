@@ -2,30 +2,21 @@ package frc.robot;
 
 import frc.parent.*;
 import frc.sensors.LemonLight;
-import edu.wpi.first.wpilibj.Encoder;
 import com.kauailabs.navx.frc.AHRS;
 import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.Timer;
-// import edu.wpi.first.networktables.NetworkTable;
-// import edu.wpi.first.networktables.NetworkTableEntry;
-// import edu.wpi.first.networktables.NetworkTableInstance;
-// import edu.wpi.first.networktables.NetworkTableType;
-// import edu.wpi.first.networktables.NetworkTableValue;
 
 public class Chassis implements RobotMap{
 
     //Talon objects for the wheels
     //These control the main 4 motors on the robot
-    public static CCTalon fLeft = new CCTalon(RobotMap.FORWARD_LEFT, RobotMap.FL_REVERSE);
-    public static CCTalon fRight = new CCTalon(RobotMap.FORWARD_RIGHT, RobotMap.FR_REVERSE);
-    public static CCTalon bLeft = new CCTalon(RobotMap.BACK_LEFT, RobotMap.BL_REVERSE);
-    public static CCTalon bRight = new CCTalon(RobotMap.BACK_RIGHT, RobotMap.BR_REVERSE);
+    public static CCTalon fLeft = new CCTalon(RobotMap.FORWARD_LEFT, false);
+    public static CCTalon fRight = new CCTalon(RobotMap.FORWARD_RIGHT, false);
+    public static CCTalon bLeft = new CCTalon(RobotMap.BACK_LEFT, false);
+    public static CCTalon bRight = new CCTalon(RobotMap.BACK_RIGHT, false);
 
-    //Talon objects for the Sensors 
-    //Ecoders measure rotations of the wheel
+    
     //AHRS gyro measures the angle of the bot
-    public static Encoder eLeft = new Encoder(RobotMap.ENCODER_A_LEFT, RobotMap.ENCODER_B_LEFT);
-    public static Encoder eRight = new Encoder(RobotMap.ENCODER_A_RIGHT, RobotMap.ENCODER_B_RIGHT);
     public static AHRS gyro = new AHRS(SPI.Port.kMXP);
 
     //To be used in TeleOP
@@ -101,14 +92,7 @@ public class Chassis implements RobotMap{
     }
     //Sets the gyro and encoders to zero
     public static void reset(){
-        eLeft.reset();
-        eRight.reset();
         gyro.reset();
-    }
-
-    //Returns the average distance of the encoders(arthimetic mean)
-    public static double getDist(){
-        return (eLeft.getDistance() + eRight.getDistance())/2;
     }
 
     /*
@@ -117,34 +101,34 @@ public class Chassis implements RobotMap{
 
     //Drives the robot to a certain distance
     //Kinda complex -> DO NOT TOUCH
-    public static void driveDist(double goal, double kp, double max, boolean debug){
-        double pos = getDist();
-        double error = goal-pos;
-        double aError = goal*0.05;
-        double input = 0;
+    // public static void driveDist(double goal, double kp, double max, boolean debug){
+    //     double pos = getDist();
+    //     double error = goal-pos;
+    //     double aError = goal*0.05;
+    //     double input = 0;
 
-        while(true){
-            pos = getDist();
-            error = goal-pos;
-            input = error*kp;
-            input = OI.normalize(input, -max, max);
+    //     while(true){
+    //         pos = getDist();
+    //         error = goal-pos;
+    //         input = error*kp;
+    //         input = OI.normalize(input, -max, max);
 
-            driveSpd(input, input);
+    //         driveSpd(input, input);
 
-            if(debug){
-                System.out.println("Input: " + input);
-                System.out.println("Error: " + error);
-                System.out.println("Position: " + pos);
-                Timer.delay(0.05);
-            }
+    //         if(debug){
+    //             System.out.println("Input: " + input);
+    //             System.out.println("Error: " + error);
+    //             System.out.println("Position: " + pos);
+    //             Timer.delay(0.05);
+    //         }
 
-            if(error <= aError){
-                driveSpd(0.0, 0.0);
-                System.out.println("YOINK, ya made it");
-                break;
-            }
-        }
-    }
+    //         if(error <= aError){
+    //             driveSpd(0.0, 0.0);
+    //             System.out.println("YOINK, ya made it");
+    //             break;
+    //         }
+    //     }
+    // }
 
     //Turns the robot to a certain angle
     //Kinda complex -> DO NOT TOUCH
@@ -155,7 +139,7 @@ public class Chassis implements RobotMap{
         double input = 0;
 
         while(true){
-            angl = getDist();
+            angl = gyro.getAngle();
             error = goal-angl;
             input = error*kp;
             input = OI.normalize(input, -max, max);

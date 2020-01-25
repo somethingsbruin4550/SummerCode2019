@@ -22,29 +22,4 @@ public interface RobotMap {
     public static final int FORWARD_RIGHT = 2;
     public static final int BACK_LEFT = 1;
     public static final int BACK_RIGHT = 8;
-
-    // Wheel Talon Polarity
-    public static final boolean FL_REVERSE = true;
-    public static final boolean FR_REVERSE = false;
-    public static final boolean BL_REVERSE = true;
-    public static final boolean BR_REVERSE = false;
-
-    // Wheel Encoder Ports
-    public static final int ENCODER_A_LEFT = 0;// 0
-    public static final int ENCODER_B_LEFT = 1; // 1
-    public static final int ENCODER_A_RIGHT = 2; // 2
-    public static final int ENCODER_B_RIGHT = 3; // 3
-       
-    // Talon Ports for Intake
-    public static final int INTAKE_A = 3;
-    public static final int INTAKE_B = 4;
-
-    // Talon ports for Climber
-    public static final int CLIMBER = 6;
-
-    // Talon ports for Elevator
-    public static final int ELEVATOR = 9;
-
-    //SparkMax Ports:
-    public static final int SHOOTER = 10;
 }

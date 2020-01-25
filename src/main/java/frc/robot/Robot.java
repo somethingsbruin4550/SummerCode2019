@@ -10,15 +10,9 @@ package frc.robot;
 import frc.parent.*;
 import frc.sensors.*;
 
-// import com.revrobotics.ControlType;
-import com.revrobotics.CANSparkMax.IdleMode;
-import com.revrobotics.CANSparkMaxLowLevel.MotorType;
-
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.networktables.NetworkTableEntry;
-import frc.robot.CCSparkMax;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.trajectory.*;
 import java.nio.file.Paths;
@@ -43,10 +37,6 @@ public class Robot extends TimedRobot implements RobotMap, ControMap {
 
 
   double spdmlt = 1;
-  Intake intake;
-  Climber climber;
-  // Elevator elevator;
-  CCSparkMax shooterMax;
 
   /**
    * This function is run when the robot is first started up and should be
@@ -65,11 +55,7 @@ public class Robot extends TimedRobot implements RobotMap, ControMap {
     m_chooser.addOption("My Auto", kCustomAuto);
     m_chooser.addOption("Reset PID Values", kResetPIDs);
     SmartDashboard.putData("Auto choices", m_chooser);
-
-    intake = new Intake(RobotMap.INTAKE_A, RobotMap.INTAKE_B);
-    climber = new Climber(RobotMap.CLIMBER, false);
-    // elevator = new Elevator();
-    shooterMax = new CCSparkMax(10, MotorType.kBrushless, IdleMode.kBrake, false);
+    
     LemonLight.setLightChannel(9);
   
     switch(DriverStation.getInstance().getAlliance()){
@@ -115,34 +101,14 @@ public class Robot extends TimedRobot implements RobotMap, ControMap {
     m_autoSelected = m_chooser.getSelected();
     // m_autoSelected = SmartDashboard.getString("Auto Selector", kDefaultAuto);
     System.out.println("Auto selected: " + m_autoSelected);
-
-
-    double Kp = SmartDashboard.getEntry("Kp").getDouble(0.0);
-    System.out.println("Shooter Kp: " + Kp);
-    double Ki = SmartDashboard.getEntry("Ki").getDouble(0.0);
-    System.out.println("Shooter Ki: " + Ki);
-    double Kd = SmartDashboard.getEntry("Kd").getDouble(0.0);
-    System.out.println("Shooter Kd: " + Kd);
     
-    shooterMax.setPID(Kp, Ki, Kd, 0);
-
-
-
 
     switch (m_autoSelected) {
       case kCustomAuto:
-        shooterMax.setPosition(0);
-        shooterMax.setReferencePosition(50);
-        System.out.println("End Auto");
-        // shooterMax.set
         break;
       case kDefaultAuto:
-        shooterMax.setPosition(0);
         break;
       case kResetPIDs:
-        SmartDashboard.putNumber("Kp", 0.0);
-        SmartDashboard.putNumber("Ki", 0.0);
-        SmartDashboard.putNumber("Kd", 0.0);
         break;
       default:
         
@@ -156,7 +122,7 @@ public class Robot extends TimedRobot implements RobotMap, ControMap {
    */
   @Override
   public void autonomousPeriodic() {
-    System.out.println(shooterMax.getPosition());
+    
   }
 
   @Override
@@ -169,42 +135,6 @@ public class Robot extends TimedRobot implements RobotMap, ControMap {
    */
   @Override
   public void teleopPeriodic() {
-    spdmlt = 13.619 * LemonLight.distToTarget() + 45;
-
-    if(!OI.button(PilotMap.STICK_MID)){
-      Chassis.axisDrive(OI.normalize(OI.axis(PilotMap.Y_AXIS), -1.0, 1.0), 
-                          -OI.normalize(OI.axis(PilotMap.X_AXIS), -1.0, 1.0));
-    } else {
-      Chassis.lockOn(false, 3.0);
-    }
-
-    if(OI.button(PilotMap.STICK_BACK)){
-      shooterMax.set(spdmlt);
-    }
-    else{
-      shooterMax.disable();
-    }
-
-    // spdmlt = OI.normalize(OI.axis(PilotMap.Z_AXIS), 0, 1);
-
-    System.out.println(spdmlt);
-    // System.out.println(Chassis.distToTarget());
-
-    // System.out.println(Chassis.distToTarget() + " Meters");
-     // Chassis.followTarget();
-      if(OI.button(PilotMap.STICK_LEFT))
-        intake.set(1.0);
-      else if(OI.button(PilotMap.TRIGGER))
-        intake.set(-1.0);
-      else
-        intake.set(0.0);
-
-      // if(OI.button(PilotMap.STICK_MID))
-      //   elevator.set(-1.0);
-      // else if(OI.button(PilotMap.STICK_BACK))
-      //   elevator.set(1.0);
-      // else
-      //   elevator.set(0.0);
 
     }
 
