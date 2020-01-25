@@ -1,8 +1,7 @@
-# CreekRobot2020
+# SummerCode2019
   
-This is the code that will eventually be used on the 2020 competition robot.  
-This code is based on the *SummerCode2019* base.  
-
+This code is to be used as the base for all 2020 robots  
+  
 **Changes From 2019 Comp Season:**  
   
 -Split RobotMap into multiple files  
