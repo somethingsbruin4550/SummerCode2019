@@ -21,5 +21,6 @@ public class CCTalon extends TalonSRX{
         super.set(ControlMode.PercentOutput, speed);
     }
 
+
 }
 

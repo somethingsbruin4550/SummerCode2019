@@ -31,11 +31,7 @@ public class Robot extends TimedRobot implements RobotMap, ControMap {
   private String m_autoSelected;
   private final SendableChooser<String> m_chooser = new SendableChooser<>();
 
-  private static int alliance;
-  
-  Trajectory trajectory;
-
-
+  int alliance;
   double spdmlt = 1;
 
   /**
@@ -44,13 +40,6 @@ public class Robot extends TimedRobot implements RobotMap, ControMap {
    */
   @Override
   public void robotInit() {
-
-    try{
-      trajectory = TrajectoryUtil.fromPathweaverJson(Paths.get("/home/lvuser/deploy/Unnamed.wpilib.json"));
-    }catch(Exception e){
-      //
-    } 
-
     m_chooser.setDefaultOption("Default Auto", kDefaultAuto);
     m_chooser.addOption("My Auto", kCustomAuto);
     m_chooser.addOption("Reset PID Values", kResetPIDs);

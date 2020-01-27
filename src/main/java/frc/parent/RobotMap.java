@@ -18,8 +18,8 @@ package frc.parent;
 public interface RobotMap {
 
     // Wheel Talons
-    public static final int FORWARD_LEFT = 5;
-    public static final int FORWARD_RIGHT = 2;
-    public static final int BACK_LEFT = 1;
-    public static final int BACK_RIGHT = 8;
+    public static final int FORWARD_LEFT = -1;
+    public static final int FORWARD_RIGHT = -1;
+    public static final int BACK_LEFT = -1;
+    public static final int BACK_RIGHT = -1;
 }
