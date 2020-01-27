@@ -14,8 +14,6 @@ import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.trajectory.*;
-import java.nio.file.Paths;
 
 /**
  * The VM is configured to automatically run this class, and to call the
